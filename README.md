@@ -43,8 +43,7 @@ To stop a running RPC node, navigate to its respective directory and run:
 ```bash
 docker-compose down
 ```
-
-    *Example (Sonic node):*
+*Example (Sonic node):*
 
     ```bash
     cd sonic/
