@@ -1,0 +1,16 @@
+# macOS hidden files
+.DS_Store
+._*
+
+# Environment variables
+.env
+
+# Data directories and logs
+.sonic/
+logs/
+*.log
+
+# Docker specific
+target/
+target-native/
+.dockerignore
