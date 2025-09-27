@@ -8,6 +8,7 @@ services:
     container_name: sonic
     restart: unless-stopped
     mem_limit: 32g
+    stop_grace_period: 120s
     command:
       - "--datadir=${DATADIR}"
       - "--http"

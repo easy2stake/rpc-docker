@@ -8,6 +8,7 @@ services:
     container_name: ftm
     restart: unless-stopped
     mem_limit: ${MEM_LIMIT}
+    stop_grace_period: 120s
     environment:
       - GOMEMLIMIT=${GOMEMLIMIT}
     command:
