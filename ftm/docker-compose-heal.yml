@@ -10,7 +10,7 @@ services:
     entrypoint: ["/app/sonictool"]
     command: ["--datadir=${DATADIR}", "--cache=${CACHE_MB}", "heal"]
     environment:
-      - GOMEMLIMIT=32GiB
+      - GOMEMLIMIT=30GiB
     volumes:
       - "${HOME}/.sonic:${DATADIR}"
     network_mode: host
