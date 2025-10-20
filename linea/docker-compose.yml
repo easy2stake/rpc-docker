@@ -1,8 +1,10 @@
 services:
   linea:
     image: nethermind/nethermind
-    container_name: linea
+    container_name: linea-el
     restart: unless-stopped
+    mem_limit: ${MEM_LIMIT}
+    stop_grace_period: 120s
     volumes:
       - ${HOME}/linea_data:${DATADIR}
     network_mode: host
