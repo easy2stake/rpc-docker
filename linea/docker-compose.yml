@@ -6,9 +6,12 @@ services:
     restart: unless-stopped
     mem_limit: ${MEM_LIMIT}
     stop_grace_period: 120s
+    ports:
+      - ${P2P_PORT}:${P2P_PORT}
+      - ${HTTP_PORT}:${HTTP_PORT}
+      - ${WS_PORT}:${WS_PORT}
     volumes:
       - ${HOME}/linea_data:${DATADIR}
-    network_mode: host
     command:
       - --datadir
       - ${DATADIR}
@@ -43,7 +46,6 @@ services:
       - ./maru/log4j.xml:/opt/consensys/maru/configs/log4j.xml:ro
       - ./engine-jwt:/opt/consensys/maru/configs/jwt:ro
       - ${HOME}/linea-maru-db:/opt/maru
-    network_mode: host
     command:
       - "java"
       - "-Dlog4j2.configurationFile=/opt/consensys/maru/configs/log4j.xml"
