@@ -8,8 +8,8 @@ services:
     stop_grace_period: 120s
     ports:
       - ${P2P_PORT}:${P2P_PORT}
-      - ${HTTP_PORT}:${HTTP_PORT}
-      - ${WS_PORT}:${WS_PORT}
+      - ${HTTP_PORT}:8545
+      - ${WS_PORT}:8546
     volumes:
       - ${HOME}/linea_data:${DATADIR}
     command:
@@ -19,8 +19,8 @@ services:
       - linea-mainnet
       - --JsonRpc.Enabled=true
       - --JsonRpc.Host=${HTTP_ADDR}
-      - --JsonRpc.Port=${HTTP_PORT}
-      - --JsonRpc.WebSocketsPort=${WS_PORT}
+      - --JsonRpc.Port=8545
+      - --JsonRpc.WebSocketsPort=8546
       - --JsonRpc.EngineHost=0.0.0.0
       - --JsonRpc.EnginePort=8550
       - --Network.P2PPort=${P2P_PORT}
