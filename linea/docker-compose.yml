@@ -17,5 +17,6 @@ services:
       - --JsonRpc.Host=${HTTP_ADDR}
       - --JsonRpc.Port=${HTTP_PORT}
       - --JsonRpc.WebSocketsPort=${WS_PORT}
+      - --Network.P2PPort=${P2P_PORT}
       - --Metrics.Enabled=true
       - --Metrics.ExposePort=${METRICS_PORT}
