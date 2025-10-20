@@ -1,6 +1,6 @@
 services:
   linea:
-    image: nethermind/nethermind
+    image: nethermind/nethermind:${NETHERMIND_VERSION}
     container_name: linea-el
     restart: unless-stopped
     mem_limit: ${MEM_LIMIT}
