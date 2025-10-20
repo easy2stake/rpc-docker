@@ -8,8 +8,8 @@ services:
     stop_grace_period: 120s
     ports:
       - ${P2P_PORT}:${P2P_PORT}
-      - ${HTTP_PORT}:8545
-      - ${WS_PORT}:8546
+      - 127.0.0.1:${HTTP_PORT}:8545
+      - 127.0.0.1:${WS_PORT}:8546
     volumes:
       - ${HOME}/linea-nether-db:${DATADIR}
       - ./engine-jwt:${DATADIR}/keystore/jwt-secret:ro
@@ -36,10 +36,10 @@ services:
     image: consensys/maru:bcfdb43
     restart: unless-stopped
     ports:
-      - "8088:8080" # Beacon/REST API
+      - "127.0.0.1:8088:8080" # Beacon/REST API
       - "9000:9000/tcp" # P2P main port
       - "9000:9000/udp" # P2P discovery port (UDP only)
-      - "9090:9090" # Metrics (optional)
+      - "127.0.0.1:9090:9090" # Metrics (optional)
     environment:
       - JAVA_OPTS=-Xmx2g
     volumes:
