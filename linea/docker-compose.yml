@@ -1,0 +1,19 @@
+services:
+  linea:
+    image: nethermind/nethermind
+    container_name: linea
+    restart: unless-stopped
+    volumes:
+      - ${HOME}/linea_data:${DATADIR}
+    network_mode: host
+    command:
+      - --datadir
+      - ${DATADIR}
+      - --config
+      - linea-mainnet
+      - --JsonRpc.Enabled=true
+      - --JsonRpc.Host=${HTTP_ADDR}
+      - --JsonRpc.Port=${HTTP_PORT}
+      - --JsonRpc.WebSocketsPort=${WS_PORT}
+      - --Metrics.Enabled=true
+      - --Metrics.ExposePort=${METRICS_PORT}
