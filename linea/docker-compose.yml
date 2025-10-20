@@ -11,7 +11,9 @@ services:
       - ${HTTP_PORT}:8545
       - ${WS_PORT}:8546
     volumes:
-      - ${HOME}/linea_data:${DATADIR}
+      - ${HOME}/linea-nether-db:${DATADIR}
+      - ./engine-jwt:${DATADIR}/keystore/jwt-secret:ro
+
     command:
       - --datadir
       - ${DATADIR}
