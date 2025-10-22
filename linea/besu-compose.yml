@@ -35,6 +35,7 @@ services:
       - --p2p-host=${EXT_IP}
       - --p2p-interface=0.0.0.0
       - --p2p-port=${P2P_PORT}
+      - --bootnodes=${BOOTNODES}
     volumes:
       - ./besu/linea-besu.config.toml:/var/lib/besu/linea-besu.config.toml:ro
       - ./besu/besu-genesis.json:/var/lib/besu/genesis.json:ro
