@@ -2,11 +2,11 @@
 volumes:
   linea-mainnet-besu:
     name: "linea-mainnet-besu"
-#     driver: local
-#     driver_opts: 
-#       type: none
-#       device: $HOME/linea-mainnet-besu
-#       o: bind
+    driver: local
+    driver_opts: 
+      type: none
+      device: $HOME/linea-mainnet-besu
+      o: bind
 
 services:
   # Besu node (Execution Layer for Maru)
