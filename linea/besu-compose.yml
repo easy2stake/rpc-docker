@@ -1,27 +1,27 @@
-# Define named volumes
-volumes:
-  linea-mainnet-besu:
-    name: "linea-mainnet-besu"
-    driver: local
-    driver_opts: 
-      type: none
-      device: $HOME/linea-mainnet-besu
-      o: bind
+# # Define named volumes
+# volumes:
+#   linea-mainnet-besu:
+#     name: "linea-mainnet-besu"
+#     driver: local
+#     driver_opts: 
+#       type: none
+#       device: $HOME/linea-mainnet-besu
+#       o: bind
 
 services:
   # Besu node (Execution Layer for Maru)
   besu-node:
     hostname: el-client
     container_name: linea-besu
-    image: consensys/linea-besu-package:beta-v4.0-rc16-20251021142842-0c1c767
+    image: ${BESU_IMAGE}
     platform: linux/amd64
     restart: unless-stopped
     ports:
-      - 127.0.0.1:28545:8545 #http
-      - 127.0.0.1:28546:8546 #ws
+      - 127.0.0.1:38545:8545 #http
+      - 127.0.0.1:38546:8546 #ws
       - 127.0.0.1:8550:8550 # Engine API (for Maru)
-      - 30304:30303 # P2P TCP
-      - 30304:30303/udp # P2P UDP
+      - ${P2P_PORT}:${P2P_PORT} # P2P TCP
+      - ${P2P_PORT}:${P2P_PORT}/udp # P2P UDP
     environment:
       - JAVA_OPTS=-Xmx2g
       - LOG4J_CONFIGURATION_FILE=/var/lib/besu/log4j.xml
@@ -31,6 +31,10 @@ services:
       - --Xdns-update-enabled=true
       - --Xrpc-ipc-enabled=true
       - --static-nodes-file=/var/lib/besu/static-nodes.json
+      - --p2p-enabled=true
+      - --p2p-host=${EXT_IP}
+      - --p2p-interface=0.0.0.0
+      - --p2p-port=${P2P_PORT}
     volumes:
       - ./besu/linea-besu.config.toml:/var/lib/besu/linea-besu.config.toml:ro
       - ./besu/besu-genesis.json:/var/lib/besu/genesis.json:ro

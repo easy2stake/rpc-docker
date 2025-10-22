@@ -11,12 +11,12 @@ services:
       - 127.0.0.1:${HTTP_PORT}:8545
       - 127.0.0.1:${WS_PORT}:8546
     volumes:
-      - ${HOME}/linea-nether-db:${DATADIR}
-      - ./engine-jwt:${DATADIR}/keystore/jwt-secret:ro
+      - ${HOME}/linea-nether-db:${NETH_DATADIR}
+      - ./engine-jwt:${NETH_DATADIR}/keystore/jwt-secret:ro
 
     command:
       - --datadir
-      - ${DATADIR}
+      - ${NETH_DATADIR}
       - --config
       - linea-mainnet
       - --JsonRpc.Enabled=true
