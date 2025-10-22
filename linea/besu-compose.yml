@@ -1,7 +1,7 @@
-# # Define named volumes
-# volumes:
-#   linea-mainnet-besu:
-#     name: "linea-mainnet-besu"
+# Define named volumes
+volumes:
+  linea-mainnet-besu:
+    name: "linea-mainnet-besu"
 #     driver: local
 #     driver_opts: 
 #       type: none
@@ -17,8 +17,8 @@ services:
     platform: linux/amd64
     restart: unless-stopped
     ports:
-      - 127.0.0.1:38545:8545 #http
-      - 127.0.0.1:38546:8546 #ws
+      - 127.0.0.1:${HTTP_PORT}:8545 #http
+      - 127.0.0.1:${WS_PORT}:8546 #ws
       - 127.0.0.1:8550:8550 # Engine API (for Maru)
       - ${P2P_PORT}:${P2P_PORT} # P2P TCP
       - ${P2P_PORT}:${P2P_PORT}/udp # P2P UDP
