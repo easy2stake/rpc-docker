@@ -50,7 +50,7 @@ services:
   maru:
     hostname: linea-maru
     container_name: linea-cl
-    image: consensys/maru:bcfdb43
+    image: ${MARU_IMAGE}
     restart: unless-stopped
     ports:
       - "127.0.0.1:8180:8080" # Beacon/REST API
