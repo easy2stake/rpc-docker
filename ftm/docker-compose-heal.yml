@@ -6,11 +6,11 @@ services:
         SONIC_VERSION: ${SONIC_VERSION}
     image: ftm-node:${SONIC_VERSION}
     container_name: ftm-heal
-    mem_limit: 32g
+    mem_limit: ${MEM_LIMIT}
     entrypoint: ["/app/sonictool"]
     command: ["--datadir=${DATADIR}", "--cache=${CACHE_MB}", "heal"]
     environment:
-      - GOMEMLIMIT=30GiB
+      - GOMEMLIMIT=${GOMEMLIMIT}
     volumes:
       - "${HOME}/.sonic:${DATADIR}"
     network_mode: host
