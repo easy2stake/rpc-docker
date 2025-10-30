@@ -18,11 +18,14 @@ RUN make cdk-erigon
 FROM ubuntu:24.04
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    ca-certificates curl \
+    ca-certificates curl libstdc++6 \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 COPY --from=builder /src/app/build/bin/cdk-erigon /app/cdk-erigon
+COPY --from=builder /src/app/build/lib/*.so* /app/lib/
+
+ENV LD_LIBRARY_PATH=/app/lib
 
 EXPOSE 8545 8551 6060
 
