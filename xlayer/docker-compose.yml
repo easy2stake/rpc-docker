@@ -3,7 +3,7 @@ name: xlayer-erigon
 services:
   xlayer:
     image: hermeznetwork/cdk-erigon:${ERIGON_VERSION}
-    container_name: xlayer
+    container_name: xlayer-cdk-erigon
     restart: unless-stopped
     mem_limit: ${MEM_LIMIT}
     stop_grace_period: 120s
