@@ -2,7 +2,9 @@ name: xlayer-erigon
 
 services:
   xlayer:
-    image: hermeznetwork/cdk-erigon:${ERIGON_VERSION}
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: xlayer-cdk-erigon
     restart: unless-stopped
     mem_limit: ${MEM_LIMIT}
