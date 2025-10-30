@@ -18,5 +18,8 @@ services:
     command:
       - "--config=/app/config/xlayer.yaml"
       - --zkevm.l1-rpc-url=${ZKEVM_L1_RPC_URL}
+      - --debug.no-sync
+      - --nodiscover 
+      - --maxpeers=0
 
 
