@@ -11,7 +11,7 @@ services:
       - "${HTTP_PORT}:8545"
       - "${WS_PORT}:8546"
     volumes:
-      - "${HOME}/.xlayer-erigon:${DATADIR}"
+      - "${HOME}/erigon-data:${DATADIR}"
       - "./xlayer.yaml:/app/config/xlayer.yaml:ro"
     command:
       - "--config=/app/config/xlayer.yaml"

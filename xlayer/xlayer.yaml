@@ -1,4 +1,4 @@
-datadir: /home/erigon
+datadir: /home/erigon-data
 chain: xlayer-mainnet
 http: true
 private.api.addr: localhost:9091
