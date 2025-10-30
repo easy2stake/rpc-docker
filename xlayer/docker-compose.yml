@@ -6,7 +6,8 @@ services:
     mem_limit: ${MEM_LIMIT}
     stop_grace_period: 120s
     ports:
-      - "127.0.0.1:29545:8545"
+      - "${HTTP_PORT}:8545"
+      - "${WS_PORT}:8546"
     volumes:
       - "${HOME}/.xlayer-erigon:${DATADIR}"
       - "./xlayer.yaml:/app/config/xlayer.yaml:ro"
