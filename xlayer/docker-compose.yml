@@ -1,3 +1,5 @@
+name: xlayer-erigon
+
 services:
   xlayer:
     image: hermeznetwork/cdk-erigon:${ERIGON_VERSION}
@@ -13,5 +15,6 @@ services:
       - "./xlayer.yaml:/app/config/xlayer.yaml:ro"
     command:
       - "--config=/app/config/xlayer.yaml"
+      - --zkevm.l1-rpc-url=${ZKEVM_L1_RPC_URL}
 
 

@@ -1,4 +1,4 @@
-datadir: /data/erigon-data/xlayer-mainnet
+datadir: /home/erigon
 chain: xlayer-mainnet
 http: true
 private.api.addr: localhost:9091
@@ -6,7 +6,6 @@ zkevm.l2-chain-id: 196
 zkevm.l2-sequencer-rpc-url: https://rpc.xlayer.tech
 zkevm.l2-datastreamer-url: stream.xlayer.tech:8800
 zkevm.l1-chain-id: 1
-zkevm.l1-rpc-url:
 
 zkevm.address-sequencer: "0xAF9d27ffe4d51eD54AC8eEc78f2785D7E11E5ab1"
 zkevm.address-zkevm: "0x2B0ee28D4D51bC9aDde5E58E295873F61F4a0507"
@@ -19,6 +18,7 @@ zkevm.l1-block-range: 2000
 zkevm.l1-query-delay: 1000
 zkevm.datastream-version: 3
 
+zkevm.rpc-ratelimit: 1000
 http.api: [eth, debug, net, trace, web3, erigon, zkevm]
 http.addr: 0.0.0.0
 http.port: 8545
