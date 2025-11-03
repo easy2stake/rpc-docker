@@ -47,5 +47,5 @@ services:
     environment:
       - DIRTY_STATE_PATTERN=${DIRTY_STATE_PATTERN:-dirty state}
       - CHECK_INTERVAL=${CHECK_INTERVAL:-60}
-    command: chmod +x /app/ftm-watcher.sh && /app/ftm-watcher.sh
+    command: "chmod +x /app/ftm-watcher.sh && /app/ftm-watcher.sh"
     network_mode: host
