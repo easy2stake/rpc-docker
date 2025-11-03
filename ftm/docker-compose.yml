@@ -35,3 +35,16 @@ services:
     volumes:
       - "${HOME}/.sonic:${DATADIR}"
     network_mode: host
+
+  ftm-watcher:
+    image: docker:cli
+    container_name: ftm-watcher
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - .:/app
+    environment:
+      - DIRTY_STATE_PATTERN=${DIRTY_STATE_PATTERN:-dirty state}
+      - CHECK_INTERVAL=${CHECK_INTERVAL:-60}
+    command: sh -c "chmod +x /app/ftm-watcher.sh && /app/ftm-watcher.sh"
+    network_mode: host
