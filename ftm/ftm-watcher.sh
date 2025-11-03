@@ -64,7 +64,7 @@ main() {
                 # Run heal script
                 log "Running heal script..."
                 if [ -f "$HEAL_SCRIPT" ]; then
-                    bash "$HEAL_SCRIPT"
+                    sh "$HEAL_SCRIPT"
                 else
                     log "ERROR: Heal script not found at $HEAL_SCRIPT"
                     log "Exiting watcher due to missing heal script"
@@ -87,6 +87,9 @@ main() {
                 else
                     log "WARNING: Some FTM containers are still running after heal"
                 fi
+            else
+                # Normal check - no dirty state found
+                log "Health check: ftm container running, no dirty state detected"
             fi
         elif is_container_running "ftm-heal"; then
             # ftm is not running but heal is - just wait
