@@ -16,15 +16,20 @@ log() {
     echo "[$(date '+%Y-%m-%d %H:%M:%S')] $*"
 }
 
-# Check if a container is running
+# Check if a container is running (exact name match)
 is_container_running() {
     local container_name=$1
     docker ps --format '{{.Names}}' | grep -q "^${container_name}$" 2>/dev/null || return 1
 }
 
+# Check if any heal container is running (pattern match for containers containing "ftm-heal")
+is_heal_container_running() {
+    docker ps --format '{{.Names}}' | grep -q "ftm-heal" 2>/dev/null || return 1
+}
+
 # Check if any FTM-related container is running
 any_ftm_container_running() {
-    is_container_running "ftm" || is_container_running "ftm-heal"
+    is_container_running "ftm" || is_heal_container_running
 }
 
 # Main monitoring loop
@@ -45,9 +50,9 @@ main() {
                 log "Pattern found: '${DIRTY_STATE_PATTERN}'"
                 
                 # Check if heal is already running
-                if is_container_running "ftm-heal"; then
+                if is_heal_container_running; then
                     log "Heal container already running, waiting for it to complete..."
-                    while is_container_running "ftm-heal"; do
+                    while is_heal_container_running; do
                         sleep 5
                     done
                     log "Heal container has finished"
@@ -73,7 +78,7 @@ main() {
                 
                 # Wait for heal container to finish
                 log "Waiting for heal container to complete..."
-                while is_container_running "ftm-heal"; do
+                while is_heal_container_running; do
                     sleep 5
                 done
                 
@@ -91,10 +96,10 @@ main() {
                 # Normal check - no dirty state found
                 log "Health check: ftm container running, no dirty state detected"
             fi
-        elif is_container_running "ftm-heal"; then
+        elif is_heal_container_running; then
             # ftm is not running but heal is - just wait
             log "ftm container not running, but heal container is active - waiting..."
-            while is_container_running "ftm-heal"; do
+            while is_heal_container_running; do
                 sleep 5
             done
             
