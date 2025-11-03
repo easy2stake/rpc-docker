@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # FTM Health Watcher Script
 # Monitors FTM container logs for dirty state errors and automatically triggers healing
