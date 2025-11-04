@@ -42,8 +42,8 @@ main() {
     while true; do
         # Check if ftm container exists and is running
         if is_container_running "ftm"; then
-            # Get recent logs (last 100 lines to avoid checking too much)
-            log_output=$(docker logs --tail 100 ftm 2>&1 || true)
+            # Get recent logs (last 10 lines to avoid checking too much)
+            log_output=$(docker logs --tail 10 ftm 2>&1 || true)
             
             # Check for dirty state pattern
             if echo "$log_output" | grep -qi "${DIRTY_STATE_PATTERN}"; then
