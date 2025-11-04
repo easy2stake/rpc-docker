@@ -45,6 +45,7 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - .:/app
+      - "${HOME}/.sonic:${HOME}/.sonic"
     environment:
       - DIRTY_STATE_PATTERN=${DIRTY_STATE_PATTERN:-dirty state}
       - CHECK_INTERVAL=${CHECK_INTERVAL:-60}
