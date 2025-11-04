@@ -46,6 +46,8 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - .:/app
       - "${HOME}/.sonic:${DATADIR}:ro"
+    # These environment variables are needed because ftm-watcher.sh triggers ftm-heal.sh,
+    # which runs docker-compose-heal.yml that requires these vars for proper container configuration
     environment:
       - DIRTY_STATE_PATTERN=${DIRTY_STATE_PATTERN:-dirty state}
       - CHECK_INTERVAL=${CHECK_INTERVAL:-60}
