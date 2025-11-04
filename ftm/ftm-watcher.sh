@@ -8,6 +8,7 @@ set -euo pipefail
 # Configuration from environment variables with defaults
 DIRTY_STATE_PATTERN="${DIRTY_STATE_PATTERN:-dirty state}"
 CHECK_INTERVAL="${CHECK_INTERVAL:-60}"
+COMPOSE_PROJECT_NAME="${COMPOSE_PROJECT_NAME:-ftm}"
 COMPOSE_FILE="/app/docker-compose.yml"
 HEAL_SCRIPT="/app/ftm-heal.sh"
 
@@ -61,7 +62,7 @@ main() {
                 # Stop ftm service
                 log "Stopping ftm service..."
                 cd /app
-                docker compose -f "$COMPOSE_FILE" stop || docker compose -f "$COMPOSE_FILE" down || true
+                docker compose -p "$COMPOSE_PROJECT_NAME" -f "$COMPOSE_FILE" stop || docker compose -p "$COMPOSE_PROJECT_NAME" -f "$COMPOSE_FILE" down || true
                 
                 # Wait a moment for container to stop
                 sleep 2
@@ -87,7 +88,7 @@ main() {
                     log "No FTM containers running - heal completed successfully"
                     log "Restarting ftm service..."
                     cd /app
-                    docker compose -f "$COMPOSE_FILE" up -d
+                    docker compose -p "$COMPOSE_PROJECT_NAME" -f "$COMPOSE_FILE" up -d
                     log "ftm service restarted"
                 else
                     log "WARNING: Some FTM containers are still running after heal"
@@ -107,7 +108,7 @@ main() {
             if ! any_ftm_container_running; then
                 log "Heal completed and no FTM containers running - restarting ftm service..."
                 cd /app
-                docker compose -f "$COMPOSE_FILE" up -d
+                docker compose -p ftm -f "$COMPOSE_FILE" up -d
                 log "ftm service restarted"
             fi
         else

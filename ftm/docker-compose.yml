@@ -48,5 +48,6 @@ services:
     environment:
       - DIRTY_STATE_PATTERN=${DIRTY_STATE_PATTERN:-dirty state}
       - CHECK_INTERVAL=${CHECK_INTERVAL:-60}
+      - COMPOSE_PROJECT_NAME=${COMPOSE_PROJECT_NAME:-ftm}
     command: "/app/ftm-watcher.sh"
     network_mode: host
