@@ -3,9 +3,9 @@
 # Get project name from environment or default to ftm
 COMPOSE_PROJECT_NAME="${COMPOSE_PROJECT_NAME:-ftm}"
 
-# Stop the main ftm service if it's running
+# Stop the main ftm service if it's running (only ftm service, not watcher)
 echo "Stopping ftm service..."
-docker compose -p "$COMPOSE_PROJECT_NAME" -f docker-compose.yml down
+docker compose -p "$COMPOSE_PROJECT_NAME" -f docker-compose.yml stop ftm || docker stop ftm || true
 
 # Run the ftm-heal service
 echo "Running ftm-heal command in detached mode..."

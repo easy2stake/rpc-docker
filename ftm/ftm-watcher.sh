@@ -59,10 +59,10 @@ main() {
                     log "Heal container has finished"
                 fi
                 
-                # Stop ftm service
+                # Stop ftm service (only the ftm service, not the watcher)
                 log "Stopping ftm service..."
                 cd /app
-                docker compose -p "$COMPOSE_PROJECT_NAME" -f "$COMPOSE_FILE" stop || docker compose -p "$COMPOSE_PROJECT_NAME" -f "$COMPOSE_FILE" down || true
+                docker compose -p "$COMPOSE_PROJECT_NAME" -f "$COMPOSE_FILE" stop ftm || docker stop ftm || true
                 
                 # Wait a moment for container to stop
                 sleep 2
@@ -88,7 +88,7 @@ main() {
                     log "No FTM containers running - heal completed successfully"
                     log "Restarting ftm service..."
                     cd /app
-                    docker compose -p "$COMPOSE_PROJECT_NAME" -f "$COMPOSE_FILE" up -d
+                    docker compose -p "$COMPOSE_PROJECT_NAME" -f "$COMPOSE_FILE" up -d ftm
                     log "ftm service restarted"
                 else
                     log "WARNING: Some FTM containers are still running after heal"
@@ -108,7 +108,7 @@ main() {
             if ! any_ftm_container_running; then
                 log "Heal completed and no FTM containers running - restarting ftm service..."
                 cd /app
-                docker compose -p ftm -f "$COMPOSE_FILE" up -d
+                docker compose -p "$COMPOSE_PROJECT_NAME" -f "$COMPOSE_FILE" up -d ftm
                 log "ftm service restarted"
             fi
         else
