@@ -45,10 +45,16 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - .:/app
-      - "${HOME}/.sonic:${HOME}/.sonic"
+      - "${HOME}/.sonic:${DATADIR}:ro"
     environment:
       - DIRTY_STATE_PATTERN=${DIRTY_STATE_PATTERN:-dirty state}
       - CHECK_INTERVAL=${CHECK_INTERVAL:-60}
       - COMPOSE_PROJECT_NAME=${COMPOSE_PROJECT_NAME:-ftm}
+      - HOME=${HOME}
+      - SONIC_VERSION=${SONIC_VERSION}
+      - DATADIR=${DATADIR}
+      - MEM_LIMIT=${MEM_LIMIT}
+      - CACHE_MB=${CACHE_MB}
+      - GOMEMLIMIT=${GOMEMLIMIT}
     command: "/app/ftm-watcher.sh"
     network_mode: host
