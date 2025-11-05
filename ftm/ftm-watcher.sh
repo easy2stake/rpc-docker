@@ -59,12 +59,15 @@ main() {
                     log "Heal container has finished"
                 fi
                 
-                # Stop ftm service (only the ftm service, not the watcher)
+                # Stop and remove ftm service to clear logs (only the ftm service, not the watcher)
                 log "Stopping ftm service..."
                 cd /app
                 docker compose -p "$COMPOSE_PROJECT_NAME" -f "$COMPOSE_FILE" stop ftm || docker stop ftm || true
+
+                log "Removing ftm container to clear logs..."
+                docker compose -p "$COMPOSE_PROJECT_NAME" -f "$COMPOSE_FILE" rm -f ftm || docker rm -f ftm || true
                 
-                # Wait a moment for container to stop
+                # Wait a moment for container to be removed
                 sleep 2
                 
                 # Run heal script
