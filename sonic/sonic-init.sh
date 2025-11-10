@@ -24,16 +24,6 @@ DATADIR="${DATADIR:-/app/.sonic}"
 GOMEMLIMIT_RUN="${GOMEMLIMIT:-28GiB}"   # default to 28GiB for this init as requested
 CACHE_MB_RUN="${CACHE_MB:-16000}"       # default to 16000 for this init
 
-# Validate required variables
-if [ -z "${SONIC_VERSION}" ]; then
-    echo "ERROR: SONIC_VERSION is not set. Please create .env from env.template"
-    exit 1
-fi
-if [ -z "${DATADIR}" ]; then
-    echo "ERROR: DATADIR is not set. Please create .env from env.template"
-    exit 1
-fi
-
 # Resolve genesis file (configurable; default is '$HOME/sonic.g')
 GENESIS_FILE_INPUT="${1:-${HOME}/sonic.g}"
 
