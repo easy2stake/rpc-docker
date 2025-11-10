@@ -66,6 +66,6 @@ docker run --rm -d \
     "sonic-node:${SONIC_VERSION}" \
     --datadir "${DATADIR}" --cache "${CACHE_MB_RUN}" genesis "/config/$(basename "${GENESIS_FILE_ABS}")"
 
-echo "Genesis initialization started in background. Check logs with: docker logs <container-id>"
+echo "Genesis initialization started in background. Check logs with: docker logs sonic-init"
 
-
+docker logs -f --tail 100 sonic-init
