@@ -59,7 +59,7 @@ echo
 # We intentionally do not use host networking; not required for genesis.
 docker run --rm -d \
     --entrypoint ./sonictool \
-    -name sonic-init \
+    --name sonic-init \
     -e "GOMEMLIMIT=${GOMEMLIMIT_RUN}" \
     -v "${HOME}/.sonic:${DATADIR}" \
     -v "${GENESIS_FILE_ABS_DIR}:/config:ro" \
