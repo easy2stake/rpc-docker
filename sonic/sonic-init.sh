@@ -58,10 +58,11 @@ echo
 # - Genesis file directory -> /config (read-only)
 # We intentionally do not use host networking; not required for genesis.
 exec docker run --rm \
+    --entrypoint ./sonictool \
     -e "GOMEMLIMIT=${GOMEMLIMIT_RUN}" \
     -v "${HOME}/.sonic:${DATADIR}" \
     -v "${GENESIS_FILE_ABS_DIR}:/config:ro" \
     "sonic-node:${SONIC_VERSION}" \
-    sonictool --datadir "${DATADIR}" --cache "${CACHE_MB_RUN}" genesis "/config/$(basename "${GENESIS_FILE_ABS}")"
+    --datadir "${DATADIR}" --cache "${CACHE_MB_RUN}" genesis "/config/$(basename "${GENESIS_FILE_ABS}")"
 
 
