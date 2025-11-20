@@ -1,0 +1,78 @@
+services:
+  arbitrum-main:
+    image: ${NITRO_IMAGE}
+    container_name: arbitrum-main
+    restart: always
+    user: "0:0"
+    ports:
+      - "127.0.0.1:${HTTP_PORT}:8547"
+      - "127.0.0.1:${WS_PORT}:8548"
+    volumes:
+      - "${HOME}/arbitrum-data:/root/.arbitrum"
+    command:
+      - --parent-chain.connection.url=${L1_URL}
+      - --node.feed.input.url=${FEED_URL}
+      - --parent-chain.blob-client.beacon-url=${L1_BEACON_URL}
+      - --chain.id=${CHAIN_ID}
+      - --http.addr=0.0.0.0
+      - --http.port=8547
+      - --http.api=${HTTP_API}
+      - --http.corsdomain=*
+      - --http.vhosts=*
+      - --ws.addr=0.0.0.0
+      - --ws.port=8548
+      - --ws.api=${WS_API}
+      - --ws.origins=*
+      - --log-level=${LOG_LEVEL}
+      - --node.staker.enable=false
+      - --execution.tx-indexer.tx-lookup-limit=0
+      - --execution.rpc.tx-fee-cap=${TX_FEE_CAP}
+      - --execution.rpc.gas-cap=${GAS_CAP}
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
+    init: true
+    stop_grace_period: 120s
+    profiles:
+      - default
+
+  arbitrum-main-pruning:
+    image: ${NITRO_IMAGE}
+    container_name: arbitrum-main-pruning
+    restart: always
+    user: "0:0"
+    ports:
+      - "127.0.0.1:${HTTP_PORT}:8547"
+      - "127.0.0.1:${WS_PORT}:8548"
+    volumes:
+      - "${HOME}/arbitrum-data:/root/.arbitrum"
+    command:
+      - --parent-chain.connection.url=${L1_URL}
+      - --node.feed.input.url=${FEED_URL}
+      - --parent-chain.blob-client.beacon-url=${L1_BEACON_URL}
+      - --chain.id=${CHAIN_ID}
+      - --http.addr=0.0.0.0
+      - --http.port=8547
+      - --http.api=${HTTP_API}
+      - --http.corsdomain=*
+      - --http.vhosts=*
+      - --ws.addr=0.0.0.0
+      - --ws.port=8548
+      - --ws.api=${WS_API}
+      - --ws.origins=*
+      - --log-level=${LOG_LEVEL}
+      - --node.staker.enable=false
+      - --execution.tx-indexer.tx-lookup-limit=0
+      - --execution.rpc.tx-fee-cap=${TX_FEE_CAP}
+      - --execution.rpc.gas-cap=${GAS_CAP}
+      - --init.prune=full
+      - --init.prune-bloom-size=${PRUNE_BLOOM_SIZE}
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
+    init: true
+    stop_grace_period: 120s
+    profiles:
+      - pruning
