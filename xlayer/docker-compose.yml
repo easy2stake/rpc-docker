@@ -21,8 +21,14 @@ services:
     command:
       - "--config=/app/config/xlayer.yaml"
       - --zkevm.l1-rpc-url=${ZKEVM_L1_RPC_URL}
-      - --debug.no-sync
       - --nodiscover 
       - --maxpeers=0
-
-
+      - --zkevm.increment-tree-always=true
+      - --zkevm.sync-limit=0
+      - --zkevm.sequencer-paused=true
+      - --zkevm.executor-enabled=false
+      - --zkevm.l1-contract-address-retrieve=false
+      - --zkevm.l1-contract-address-check=false
+      - --zkevm.l1-sync-start-block=0
+      - --zkevm.l1-sync-stop-batch=1
+      - --debug.no-sync=true
