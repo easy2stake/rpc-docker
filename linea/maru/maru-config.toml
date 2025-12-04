@@ -23,8 +23,8 @@ reconnect-delay = "500ms"
 
 [payload-validator]
 # Besu and Geth node as execution layer client
-engine-api-endpoint = { endpoint = "http://el-client:8550", jwt-secret-path = "/opt/consensys/maru/configs/jwt" }
-eth-api-endpoint = { endpoint = "http://el-client:8545" }
+engine-api-endpoint = { endpoint = "http://127.0.0.1:8550", jwt-secret-path = "/opt/consensys/maru/configs/jwt" }
+eth-api-endpoint = { endpoint = "http://127.0.0.1:8545" }
 payload-validation-enabled = false
 
 [observability]
@@ -33,7 +33,7 @@ jvm-metrics-enabled = true
 prometheus-metrics-enabled = true
 
 [api]
-port = 8080
+port = 8180
 
 [syncing]
 peer-chain-height-polling-interval = "5s"

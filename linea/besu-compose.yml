@@ -6,12 +6,13 @@ services:
     image: ${BESU_IMAGE}
     platform: linux/amd64
     restart: unless-stopped
-    ports:
-      - 127.0.0.1:${HTTP_PORT}:8545 #http
-      - 127.0.0.1:${WS_PORT}:8546 #ws
-      - 127.0.0.1:8550:8550 # Engine API (for Maru)
-      - ${P2P_PORT}:${P2P_PORT} # P2P TCP
-      - ${P2P_PORT}:${P2P_PORT}/udp # P2P UDP
+    network_mode: host
+    # ports:
+    #   - 127.0.0.1:${HTTP_PORT}:8545 #http
+    #   - 127.0.0.1:${WS_PORT}:8546 #ws
+    #   - 127.0.0.1:8550:8550 # Engine API (for Maru)
+    #   - ${P2P_PORT}:${P2P_PORT} # P2P TCP
+    #   - ${P2P_PORT}:${P2P_PORT}/udp # P2P UDP
     environment:
       - JAVA_OPTS=-Xmx2g
       - LOG4J_CONFIGURATION_FILE=/var/lib/besu/log4j.xml
@@ -41,11 +42,12 @@ services:
     container_name: linea-cl
     image: ${MARU_IMAGE}
     restart: unless-stopped
-    ports:
-      - "127.0.0.1:8180:8080" # Beacon/REST API
-      - "9000:9000/tcp" # P2P main port
-      - "9000:9000/udp" # P2P discovery port (UDP only)
-      - "127.0.0.1:9090:9090" # Metrics (optional)
+    network_mode: host
+    # ports:
+    #   - "127.0.0.1:8180:8080" # Beacon/REST API
+    #   - "9000:9000/tcp" # P2P main port
+    #   - "9000:9000/udp" # P2P discovery port (UDP only)
+    #   - "127.0.0.1:9090:9090" # Metrics (optional)
     environment:
       - JAVA_OPTS=-Xmx2g
     volumes:
@@ -63,7 +65,6 @@ services:
       - "--config"
       - "/opt/consensys/maru/configs/maru-config.toml"
 
-
-networks:
-  linea_besu:
-    name: linea_besu
+# networks:
+#   linea_besu:
+#     name: linea_besu
