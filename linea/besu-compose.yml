@@ -30,11 +30,10 @@ services:
       - --bootnodes=${BOOTNODES}
     volumes:
       - ./besu/linea-besu.config.toml:/var/lib/besu/linea-besu.config.toml:ro
-      - ./besu/besu-genesis.json:/var/lib/besu/genesis.json:ro
       - ./besu/log4j.xml:/var/lib/besu/log4j.xml
       - ./execution-layer-static-nodes.json:/var/lib/besu/static-nodes.json:ro
       - ./engine-jwt:/var/lib/besu/jwt:ro
-      - $HOME/besu-db:/opt/besu/data
+      - $HOME/besu-db:/data
 
   # Maru Consensus Layer
   maru:
