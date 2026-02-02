@@ -47,6 +47,7 @@ services:
       - --rpc.evmtimeout=${RPC_EVM_TIMEOUT}
       - --txpool.locals=${TXPOOL_LOCALS}
       - --txpool.pricelimit=${TXPOOL_PRICE_LIMIT}
+      - --txlookuplimit=0
       - --miner.gasprice=${MINER_GASPRICE}
     volumes:
       - "${HOST_DATADIR:-$HOME/chain-data}:/bsc/.ethereum"
