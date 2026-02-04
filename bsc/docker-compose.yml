@@ -22,6 +22,7 @@ services:
       - --cache=${CACHE}
       - --datadir=/bsc/.ethereum
       - --syncmode=${SYNC_MODE}
+      - --gcmode=${GCMODE}
       - --state.scheme=path
       - --port=${P2P_PORT}
       - --nat=extip:${EXT_IP}
@@ -48,7 +49,10 @@ services:
       - --rpc.evmtimeout=${RPC_EVM_TIMEOUT}
       - --txpool.locals=${TXPOOL_LOCALS}
       - --txpool.pricelimit=${TXPOOL_PRICE_LIMIT}
+      - --history.blocks=${HISTORY_BLOCKS}
       - --history.transactions=${HISTORY_TRANSACTIONS}
+      - --history.state=${HISTORY_STATE}
+      - --history.logs=${HISTORY_LOGS}
       - --miner.gasprice=${MINER_GASPRICE}
     volumes:
       - "${HOST_DATADIR:-$HOME/chain-data}:/bsc/.ethereum"
