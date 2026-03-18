@@ -4,6 +4,7 @@ services:
   node:
     restart: unless-stopped
     stop_grace_period: 120s
+    init: true
     build: .
     command:
       - --serve-eth-rpc
@@ -20,6 +21,7 @@ services:
 
   pruner:
     restart: unless-stopped
+    init: true
     build: ./pruner
     environment:
       - PRUNE_RETENTION_HOURS=${PRUNE_RETENTION_HOURS:-48}
