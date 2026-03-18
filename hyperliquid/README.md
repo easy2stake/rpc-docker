@@ -45,7 +45,9 @@ It may take a while as the node navigates the network to find an appropriate pee
 
 ## Reading L1 Data
 
-The node writes data to the mounted volume (default `$HOME/hl-data` on host, `~/hl/data` in container). With default settings, the network will generate around 100 GB of logs per day, so it is recommended to archive or delete old files. The pruner service handles this automatically.
+The node writes data to the mounted volume (default `$HOME/hl-data` on host, `~/hl` in container). The entire `hl` folder is persisted, including `data` and `hyperliquid_data`. With default settings, the network will generate around 100 GB of logs per day, so it is recommended to archive or delete old files. The pruner service handles this automatically.
+
+**Migration:** If you have existing data in `$HL_DATA_DIR` from before this change, move it into a `data` subdirectory: `mkdir -p data && mv replica_cmds periodic_abci_states visor_child_stderr data/ 2>/dev/null; true`
 
 For more information about examples and all the data types that can be written, see [Reading L1 Data](https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/nodes/reading-l1-data).
 

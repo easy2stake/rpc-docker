@@ -12,7 +12,7 @@ services:
       - "127.0.0.1:${RPC_PORT:-3001}:3001"  # EVM RPC + info server
       - "4000-4010:4000-4010"
     volumes:
-      - "${HL_DATA_DIR:-$HOME/hl-data}:/home/hluser/hl/data"
+      - "${HL_DATA_DIR:-$HOME/hl-data}:/home/hluser/hl"
     logging:
       options:
         max-size: "10m"
@@ -20,9 +20,8 @@ services:
 
   pruner:
     restart: unless-stopped
-    init: true
     build: ./pruner
     environment:
       - PRUNE_RETENTION_HOURS=${PRUNE_RETENTION_HOURS:-48}
     volumes:
-      - "${HL_DATA_DIR:-$HOME/hl-data}:/home/hluser/hl/data"
+      - "${HL_DATA_DIR:-$HOME/hl-data}:/home/hluser/hl"
