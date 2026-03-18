@@ -12,7 +12,7 @@ ARG HL_VISOR_ASC_URL=https://binaries.hyperliquid.xyz/Mainnet/hl-visor.asc
 # Create user and install dependencies
 RUN groupadd --gid $USER_GID $USERNAME \
     && useradd --uid $USER_UID --gid $USER_GID -m $USERNAME \
-    && apt-get update -y && apt-get install -y curl gnupg jq \
+    && apt-get update -y && apt-get install -y curl gnupg \
     && apt-get clean && rm -rf /var/lib/apt/lists/* \
     && mkdir -p /home/$USERNAME/hl/data && chown -R $USERNAME:$USERNAME /home/$USERNAME/hl
 
@@ -21,7 +21,7 @@ WORKDIR /home/$USERNAME
 
 # Configure chain to Mainnet
 RUN echo '{"chain": "Mainnet"}' > /home/$USERNAME/visor.json
-RUN echo "{ \"root_node_ips\": $(curl -s -X POST --header "Content-Type: application/json" --data '{ "type": "gossipRootIps" }' https://api.hyperliquid.xyz/info | jq '[.[] | {"Ip": .}]'), \"try_new_peers\": false, \"chain\": \"Mainnet\", \"reserved_peer_ips\": [] }" > ~/override_gossip_config.json
+COPY override_gossip_config.json /home/$USERNAME/override_gossip_config.json
 
 # Import GPG public key
 RUN curl -o /home/$USERNAME/pub_key.asc $PUB_KEY_URL \
