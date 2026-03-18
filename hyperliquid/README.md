@@ -22,10 +22,12 @@ The Docker image is configured for **Mainnet** in the [Dockerfile](Dockerfile).
 
 ### override_gossip_config.json
 
-Non-validators on Mainnet need at least one seed peer IP to bootstrap. The node uses `~/override_gossip_config.json` to discover initial peers. This repo includes a static config with current Mainnet seed IPs in [override_gossip_config.json](override_gossip_config.json). Update it periodically if peers change; fetch fresh IPs via:
+Non-validators on Mainnet need at least one seed peer IP to bootstrap. The node uses `~/override_gossip_config.json` to discover initial peers. This repo includes a static config in [override_gossip_config.json](override_gossip_config.json). To update it with fresh IPs from the API (requires `jq`):
 
 ```bash
-curl -s -X POST -H "Content-Type: application/json" -d '{"type":"gossipRootIps"}' https://api.hyperliquid.xyz/info
+cd hyperliquid
+echo "{ \"root_node_ips\": $(curl -s -X POST --header "Content-Type: application/json" --data '{ "type": "gossipRootIps" }' https://api.hyperliquid.xyz/info | jq '[.[] | {"Ip": .}]'), \"try_new_peers\": false, \"chain\": \"Mainnet\", \"reserved_peer_ips\": [] }" > override_gossip_config.json
+docker compose build node && docker compose up -d
 ```
 
 ## Running
