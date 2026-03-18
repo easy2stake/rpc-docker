@@ -1,0 +1,27 @@
+name: "hyperliquid"
+
+services:
+  node:
+    restart: unless-stopped
+    stop_grace_period: 120s
+    build: .
+    command:
+      - --serve-eth-rpc
+      - --serve-info
+    ports:
+      - "127.0.0.1:${RPC_PORT:-3001}:3001"  # EVM RPC + info server
+      - "4000-4010:4000-4010"
+    volumes:
+      - "${HL_DATA_DIR:-$HOME/hl-data}:/home/hluser/hl/data"
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  pruner:
+    restart: unless-stopped
+    build: ./pruner
+    environment:
+      - PRUNE_RETENTION_HOURS=${PRUNE_RETENTION_HOURS:-48}
+    volumes:
+      - "${HL_DATA_DIR:-$HOME/hl-data}:/home/hluser/hl/data"
