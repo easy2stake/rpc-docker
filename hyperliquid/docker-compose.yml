@@ -8,9 +8,10 @@ services:
     command:
       - --serve-eth-rpc
       - --serve-info
-    ports:
-      - "127.0.0.1:${RPC_PORT:-3001}:3001"  # EVM RPC + info server
-      - "4000-4010:4000-4010"
+    # ports:
+    #   - "127.0.0.1:${RPC_PORT:-3001}:3001"  # EVM RPC + info server
+    #   - "4000-4010:4000-4010"
+    network_mode: host
     volumes:
       - "${HL_DATA_DIR:-$HOME/hl-data}:/home/hluser/hl"
     logging:
