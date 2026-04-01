@@ -22,8 +22,8 @@ services:
       - --Xdns-update-enabled=true
       - --Xrpc-ipc-enabled=true
       - --static-nodes-file=/var/lib/besu/static-nodes.json
-      - --bonsai-trie-logs-pruning-window-size=10000
-      - --bonsai-historical-block-limit=5000
+      - --bonsai-trie-logs-pruning-window-size=${BONSAI_TRIE_LOGS_PRUNING_WINDOW_SIZE}
+      - --bonsai-historical-block-limit=${BONSAI_HISTORICAL_BLOCK_LIMIT}
       - --p2p-enabled=true
       - --p2p-host=${EXT_IP}
       - --p2p-interface=0.0.0.0
