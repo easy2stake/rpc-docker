@@ -24,6 +24,10 @@ services:
       - --static-nodes-file=/var/lib/besu/static-nodes.json
       - --bonsai-trie-logs-pruning-window-size=${BONSAI_TRIE_LOGS_PRUNING_WINDOW_SIZE}
       - --bonsai-historical-block-limit=${BONSAI_HISTORICAL_BLOCK_LIMIT}
+      - --auto-log-bloom-caching-enabled=true
+      - --cache-last-blocks=2048
+      - --cache-last-block-headers=50000
+      - --bonsai-parallel-tx-processing-enabled=true
       - --p2p-enabled=true
       - --p2p-host=${EXT_IP}
       - --p2p-interface=0.0.0.0
