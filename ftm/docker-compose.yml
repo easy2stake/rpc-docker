@@ -31,6 +31,7 @@ services:
       - "--maxpeers=${MAX_PEERS}"
       - "--rpc.gascap=${GAS_CAP}"
       - "--rpc.txfeecap=${TX_FEE_CAP}"
+      - "--bootnodes=${BOOTNODES}"
 
     volumes:
       - "${HOME}/.sonic:${DATADIR}"
