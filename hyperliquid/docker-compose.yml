@@ -14,6 +14,7 @@ services:
     network_mode: host
     volumes:
       - "${HL_DATA_DIR:-$HOME/hl-data}:/home/hluser/hl"
+      - ./override_gossip_config.json:/home/hluser/override_gossip_config.json
     logging:
       options:
         max-size: "10m"
