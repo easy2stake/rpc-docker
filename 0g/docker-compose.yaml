@@ -50,7 +50,12 @@ services:
       - "${RPC_PORT}:26657"
       - "${LCD_PORT}:1317"
   geth:
-    image: ${GETH_IMAGE}
+    build:
+      context: .
+      dockerfile: Dockerfile.geth
+      args:
+        ARISTOTLE_VERSION: ${ARISTOTLE_VERSION:-1.0.4}
+    image: ${GETH_IMAGE:-0g-geth:1.0.4}
     restart: unless-stopped
     working_dir: /home/zerog
     networks:
