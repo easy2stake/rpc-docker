@@ -23,7 +23,6 @@ services:
         max-size: "12m"
         max-file: "5"
     command: >
-      run
       start
       --rpc.laddr="tcp://0.0.0.0:26657"
       --chaincfg.chain-spec="mainnet"
@@ -44,14 +43,8 @@ services:
       --p2p.persistent_peers=${PERSISTENT_PEERS:-""}
     volumes:
       - type: bind
-        source: $HOME/chain-data/data
-        target: /home/zerog/.0gchain/data
-      - type: bind
-        source: $HOME/chain-data/config
-        target: /home/zerog/.0gchain/config
-      - type: bind
-        source: $HOME/chain-data/keyring
-        target: /home/zerog/.0gchain/keyring-test
+        source: $HOME/chain-data
+        target: /home/zerog/.0gchain
     ports:
       - "${P2P_PORT}:26656" # p2p
       - "${RPC_PORT}:26657"
