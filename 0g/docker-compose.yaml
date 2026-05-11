@@ -1,0 +1,108 @@
+networks:
+  og:
+
+services:
+  node:
+    build:
+      context: .
+      dockerfile: Dockerfile.node
+      args:
+        ARISTOTLE_VERSION: ${ARISTOTLE_VERSION:-1.0.4}
+    image: ${NODE_IMAGE:-0g-node:1.0.4}
+    restart: unless-stopped
+    working_dir: /home/zerog
+    networks:
+      og:
+    environment:
+      - GOGC=${NODE_GOGC:-900}
+      - GOMEMLIMIT=${NODE_GOMEMLIMIT:-40GiB}
+    env_file:
+      - .env
+    logging:
+      options:
+        max-size: "12m"
+        max-file: "5"
+    command: >
+      run
+      start
+      --rpc.laddr="tcp://0.0.0.0:26657"
+      --chaincfg.chain-spec="mainnet"
+      --chaincfg.kzg.trusted-setup-path=/home/zerog/.0gchain/config/kzg-trusted-setup.json
+      --chaincfg.engine.jwt-secret-path=/home/zerog/.0gchain/config/jwt-secret.hex
+      --chaincfg.kzg.implementation=crate-crypto/go-kzg-4844
+      --chaincfg.block-store-service.enabled
+      --chaincfg.node-api.enabled
+      --chaincfg.node-api.logging
+      --chaincfg.node-api.address="0.0.0.0:3500"
+      --pruning=nothing
+      --home="/home/zerog/.0gchain"
+      --chaincfg.logger.log-level=${NODE_LOG_LEVEL:-info}
+      --proxy_app="tcp://0.0.0.0:26658"
+      --p2p.laddr="tcp://0.0.0.0:20656"
+      --p2p.seeds=${SEEDS}
+      --p2p.external_address=185.252.220.86:20656
+      --p2p.persistent_peers=${PERSISTENT_PEERS:-""}
+    volumes:
+      - type: bind
+        source: $HOME/chain-data/data
+        target: /home/zerog/.0gchain/data
+      - type: bind
+        source: $HOME/chain-data/config
+        target: /home/zerog/.0gchain/config
+      - type: bind
+        source: $HOME/chain-data/keyring
+        target: /home/zerog/.0gchain/keyring-test
+    ports:
+      - "${P2P_PORT}:26656" # p2p
+      - "${RPC_PORT}:26657"
+      - "${LCD_PORT}:1317"
+  geth:
+    image: ${GETH_IMAGE}
+    restart: unless-stopped
+    working_dir: /home/zerog
+    networks:
+      og:
+    env_file:
+      - .env
+    ports:
+      - ${EVM_P2P_PORT}:${EVM_P2P_PORT}
+      - "${EVM_JSON_RPC_PORT}:8545"
+    logging:
+      options:
+        max-size: "12m"
+        max-file: "5"
+    command: >
+        --datadir /home/zerog/geth_home
+        --ipcpath geth.ipc
+        --state.scheme path
+        --db.engine pebble
+        --history.transactions 0
+        --authrpc.jwtsecret /home/zerog/geth_home/jwt-secret.hex
+        --authrpc.addr 0.0.0.0
+        --authrpc.port 8551
+        --authrpc.vhosts "*"
+        --networkid 16661
+        --syncmode full
+        --nat extip:${EXTERNAL_IP}
+        --port ${EVM_P2P_PORT}
+        --discovery.port ${EVM_P2P_PORT}
+        --maxpeers 50
+        --bootnodes=${BOOTNODES}
+        --http
+        --http.addr 0.0.0.0
+        --http.port 8545
+        --http.corsdomain "*"
+        --http.vhosts "*"
+        --http.api engine,net,web3,eth,txpool
+        --ws
+        --ws.addr 0.0.0.0
+        --ws.port 8546
+        --ws.origins "*"
+        --ws.api engine,net,web3,eth
+        --rpc.batch-request-limit 1000
+        --rpc.batch-response-max-size 25000000
+
+    volumes:
+      - type: bind
+        source: $HOME/geth-data
+        target: /home/zerog/geth_home
