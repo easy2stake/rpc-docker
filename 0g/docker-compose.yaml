@@ -65,6 +65,7 @@ services:
     ports:
       - ${EVM_P2P_PORT}:${EVM_P2P_PORT}
       - "${EVM_JSON_RPC_PORT}:8545"
+      - "${EVM_WS_PORT}:8546"
     logging:
       options:
         max-size: "12m"
