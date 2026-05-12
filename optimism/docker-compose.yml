@@ -11,7 +11,7 @@ services:
     container_name: op-reth-archive
     restart: unless-stopped
     volumes:
-      - ./op-reth-datadir/:/data
+      - ${HOME}/op-reth-datadir/:/data
     ports:
       - 127.0.0.1:8991:8545
       - 127.0.0.1:8992:8546
@@ -52,7 +52,7 @@ services:
     image: ${OP_NODE_IMAGE}
     container_name: op-node-archive
     volumes:
-      - ./op-node-datadir/:/data
+      - ${HOME}/op-node-datadir/:/data
     restart: unless-stopped
     stop_grace_period: 360s
     ports:
