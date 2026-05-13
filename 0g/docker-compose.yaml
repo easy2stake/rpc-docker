@@ -73,8 +73,8 @@ services:
     command: >
         --datadir /home/zerog/geth_home
         --ipcpath geth.ipc
-        --state.scheme path
-        --db.engine pebble
+        --state.scheme ${GETH_STATE_SCHEME:-path}
+        --gcmode ${GETH_GCMODE:-full}
         --history.transactions 0
         --authrpc.jwtsecret /home/zerog/geth_home/jwt-secret.hex
         --authrpc.addr 0.0.0.0
