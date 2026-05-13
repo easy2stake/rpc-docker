@@ -79,6 +79,20 @@ for bin in openssl curl jq; do
   fi
 done
 
+# Conduit rollup.json from GCS has no alt_da; op-node --altda.enabled=true requires it or it exits with "no altDA config".
+patch_rollup_alt_da() {
+  local path="$1"
+  [[ -f "$path" ]] || return 0
+  echo "Ensuring rollup alt_da block (required for op-node --altda.enabled)..."
+  jq '.alt_da = {
+    "da_commitment_type": "GenericCommitment",
+    "da_challenge_contract_address": "0x0000000000000000000000000000000000000000",
+    "da_challenge_window": 1,
+    "da_resolve_window": 1
+  }' "$path" > "${path}.tmp"
+  mv "${path}.tmp" "$path"
+}
+
 mkdir -p "$RONIN_RETH_DATADIR" "$RONIN_OP_NODE_DATADIR"
 
 JWT_PATH="${RONIN_RETH_DATADIR}/jwt.hex"
@@ -101,20 +115,14 @@ fi
 
 ROLLUP_PATH="${RONIN_OP_NODE_DATADIR}/rollup.json"
 if [[ -f "$ROLLUP_PATH" && "$FORCE" -eq 0 ]]; then
-  echo "Rollup config exists (skip). Use --force to re-download: $ROLLUP_PATH"
+  echo "Rollup config exists (skip download). Use --force to re-download: $ROLLUP_PATH"
 else
   echo "Downloading rollup.json (${RONIN_NETWORK})..."
   curl -fL --retry 5 --retry-delay 5 "$ROLLUP_URL" -o "$ROLLUP_PATH"
-  echo "Applying alt_da patch for EigenDA (Conduit op-node)..."
-  jq '.alt_da = {
-    "da_commitment_type": "GenericCommitment",
-    "da_challenge_contract_address": "0x0000000000000000000000000000000000000000",
-    "da_challenge_window": 1,
-    "da_resolve_window": 1
-  }' "$ROLLUP_PATH" > "${ROLLUP_PATH}.tmp"
-  mv "${ROLLUP_PATH}.tmp" "$ROLLUP_PATH"
   echo "Wrote $ROLLUP_PATH"
 fi
+
+patch_rollup_alt_da "$ROLLUP_PATH"
 
 echo ""
 echo "Done. Datadirs:"
