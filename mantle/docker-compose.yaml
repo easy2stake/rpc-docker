@@ -1,0 +1,131 @@
+networks:
+  rpc-network:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: ${RPC_NETWORK_SUBNET:-172.28.79.0/24}
+          gateway: ${RPC_NETWORK_GATEWAY:-172.28.79.1}
+
+x-healthcheck: &healthcheck
+  test: [ "CMD", "curl", "-sf", "http://localhost:8545" ]
+  interval: 5s
+  timeout: 5s
+  retries: 3
+  start_period: 30s
+
+services:
+  mantle-op-geth:
+    image: ${MANTLE_OP_GETH_IMAGE}
+    container_name: mantle-op-geth
+    stop_grace_period: 120s
+    deploy:
+      resources:
+        limits:
+          cpus: "${MANTLE_OP_GETH_CPUS:-4}"
+          memory: ${MANTLE_OP_GETH_MEMORY:-8000M}
+        reservations:
+          cpus: "${MANTLE_OP_GETH_CPUS:-4}"
+          memory: ${MANTLE_OP_GETH_MEMORY:-8000M}
+      restart_policy:
+        condition: on-failure
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    entrypoint: geth
+    command:
+      - --datadir=/db
+      - --verbosity=${GETH_VERBOSITY:-3}
+      - --port=30300
+      - --http
+      - --http.corsdomain=*
+      - --http.vhosts=*
+      - --http.addr=0.0.0.0
+      - --http.port=8545
+      - --http.api=${GETH_HTTP_API:-web3,eth,txpool,net}
+      - --ws
+      - --ws.addr=0.0.0.0
+      - --ws.port=8546
+      - --ws.origins=*
+      - --ws.api=${GETH_WS_API:-web3,eth,txpool,net}
+      - --syncmode=${GETH_SYNCMODE:-full}
+      - --maxpeers=${GETH_MAXPEERS:-0}
+      - --nat=extip:${EXT_IP}
+      - --networkid=${GETH_NETWORK_ID:-5000}
+      - --rpc.allow-unprotected-txs
+      - --authrpc.addr=0.0.0.0
+      - --authrpc.port=8551
+      - --authrpc.vhosts=*
+      - --authrpc.jwtsecret=/secret/jwt_secret_txt
+      - --pprof
+      - --pprof.addr=0.0.0.0
+      - --pprof.port=${GETH_PPROF_PORT:-6060}
+      - --gcmode=${GETH_GCMODE:-full}
+      - --txlookuplimit=${GETH_TXLOOKUPLIMIT:-0}
+      - --metrics
+      - --metrics.addr=0.0.0.0
+      - --metrics.port=${GETH_METRICS_PORT:-9001}
+      - --rollup.sequencerhttp=${ROLLUP_SEQUENCER_HTTP:-https://rpc.mantle.xyz}
+    volumes:
+      - ${MANTLE_SECRET_DIR}:/secret/
+      - ${MANTLE_GETH_DATADIR}:/db/geth/
+    ports:
+      - ${GETH_HTTP_HOST_PORT:-127.0.0.1:18945}:8545
+      - ${GETH_WS_HOST_PORT:-127.0.0.1:18946}:8546
+      - ${GETH_P2P_PORT:-30300}:30300
+      - ${GETH_P2P_PORT:-30300}:30300/udp
+    networks:
+      - rpc-network
+
+  mantle-op-node:
+    image: ${MANTLE_OP_NODE_IMAGE}
+    container_name: mantle-op-node
+    deploy:
+      resources:
+        limits:
+          cpus: "${MANTLE_OP_NODE_CPUS:-4}"
+          memory: ${MANTLE_OP_NODE_MEMORY:-8000M}
+        reservations:
+          cpus: "${MANTLE_OP_NODE_CPUS:-4}"
+          memory: ${MANTLE_OP_NODE_MEMORY:-8000M}
+      restart_policy:
+        condition: on-failure
+    depends_on:
+      - mantle-op-geth
+    volumes:
+      - ${MANTLE_SECRET_DIR}:/secret
+      - ${MANTLE_ROLLUP_JSON}:/config/rollup.json
+    environment:
+      OP_NODE_L1_BEACON: ${L1_BEACON_URL}
+      OP_NODE_L1_ETH_RPC: ${L1_ETH_RPC_URL}
+      OP_NODE_L2_ENGINE_RPC: http://mantle-op-geth:8551
+      OP_NODE_L2_ENGINE_AUTH: /secret/jwt_secret_txt
+      OP_NODE_ROLLUP_CONFIG: /config/rollup.json
+      OP_NODE_P2P_PRIV_PATH: /secret/p2p_node_key_txt
+      OP_NODE_VERIFIER_L1_CONFS: ${OP_NODE_VERIFIER_L1_CONFS:-3}
+      OP_NODE_RPC_ADDR: ${OP_NODE_RPC_ADDR:-0.0.0.0}
+      OP_NODE_RPC_PORT: ${OP_NODE_RPC_PORT:-8545}
+      OP_NODE_P2P_LISTEN_IP: ${OP_NODE_P2P_LISTEN_IP:-0.0.0.0}
+      OP_NODE_P2P_LISTEN_TCP_PORT: ${OP_NODE_P2P_LISTEN_TCP_PORT:-9003}
+      OP_NODE_P2P_LISTEN_UDP_PORT: ${OP_NODE_P2P_LISTEN_UDP_PORT:-9003}
+      OP_NODE_P2P_ADVERTISE_IP: ${EXT_IP}
+      OP_NODE_P2P_PEER_SCORING: ${OP_NODE_P2P_PEER_SCORING:-light}
+      OP_NODE_P2P_PEER_BANNING: ${OP_NODE_P2P_PEER_BANNING:-true}
+      OP_NODE_METRICS_ENABLED: ${OP_NODE_METRICS_ENABLED:-true}
+      OP_NODE_METRICS_ADDR: ${OP_NODE_METRICS_ADDR:-0.0.0.0}
+      OP_NODE_METRICS_PORT: ${OP_NODE_METRICS_PORT:-7300}
+      OP_NODE_PPROF_ENABLED: ${OP_NODE_PPROF_ENABLED:-true}
+      OP_NODE_PPROF_PORT: ${OP_NODE_PPROF_PORT:-6060}
+      OP_NODE_PPROF_ADDR: ${OP_NODE_PPROF_ADDR:-0.0.0.0}
+      OP_NODE_P2P_DISCOVERY_PATH: ${OP_NODE_P2P_DISCOVERY_PATH:-/op-node/opnode_discovery_db}
+      OP_NODE_P2P_PEERSTORE_PATH: ${OP_NODE_P2P_PEERSTORE_PATH:-/op-node/opnode_peerstore_db}
+      OP_NODE_INDEXER_SOCKET: ${OP_NODE_INDEXER_SOCKET:-da-indexer-api.mantle.xyz:443}
+      OP_NODE_INDEXER_ENABLE: ${OP_NODE_INDEXER_ENABLE:-true}
+      OP_NODE_L2_BACKUP_UNSAFE_SYNC_RPC: ${OP_NODE_L2_BACKUP_UNSAFE_SYNC_RPC:-https://rpc.mantle.xyz}
+      OP_NODE_P2P_STATIC: ${OP_NODE_P2P_STATIC}
+      OP_NODE_SEQUENCER_ENABLED: ${OP_NODE_SEQUENCER_ENABLED:-false}
+      OP_NODE_P2P_AGENT: ${OP_NODE_P2P_AGENT:-mantle}
+      OP_NODE_L2_ENGINE_SYNC_ENABLED: ${OP_NODE_L2_ENGINE_SYNC_ENABLED:-true}
+      OP_NODE_L2_SKIP_SYNC_START_CHECK: ${OP_NODE_L2_SKIP_SYNC_START_CHECK:-true}
+      OP_NODE_P2P_SYNC_REQ_RESP: ${OP_NODE_P2P_SYNC_REQ_RESP:-true}
+    networks:
+      - rpc-network
