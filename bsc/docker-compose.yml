@@ -3,6 +3,7 @@ services:
     image: ${BSC_IMAGE}
     container_name: bsc-geth-rpc
     restart: unless-stopped
+    cpus: ${CPU_COUNT_LIMIT}
     stop_grace_period: 120s
     environment:
       - GOGC=${GOGC}
